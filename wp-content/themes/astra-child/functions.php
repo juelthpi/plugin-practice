@@ -23,3 +23,11 @@ function child_enqueue_styles() {
 }
 
 add_action( 'wp_enqueue_scripts', 'child_enqueue_styles', 15 );
+
+
+// Start custome code
+function label_text_filter_hook($label_text_heading_arg){
+	  $label_text_heading_arg="My Word Count";
+	return $label_text_heading_arg;
+}
+add_filter('label_text_heading','label_text_filter_hook');

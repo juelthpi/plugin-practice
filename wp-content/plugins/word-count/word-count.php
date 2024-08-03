@@ -14,16 +14,29 @@
  * Text Domain:       word-count
  * Domain Path:       /languages
  */
+    function wordcount_activation_hook(){}
+    register_activation_hook(__FILE__,'wordcount_activation_hook');
+    function deactivation_hook(){}
+    register_deactivation_hook(__FILE__,'wordcount_deactivation_hook');
 
-
-    function word_count_activation(){}
-    register_activation_hook(__FILE__,'word_count_activation');
-    function word_count_deactivation(){}
-    register_deactivation_hook(__FILE__,'word_count_deactivation');
-    function word_count_action($word_count_content){
-       $id= get_the_Id($word_count_content);
-        return $word_count_content . " " .  $id;
+    function wordcount_load_textdomain(){
+        load_plugin_textdomain('word-count',false,dirname(__FILE__)."/languages");
     }
-    add_action('the_content','word_count_action');
+    // text domain add code
+    add_action('plugins_loaded','wordcount_load_textdomain');
+    function wordcount_count_word($content_argument){
+        // html tag remove strip_tags
+        $content_argument=strip_tags($content_argument);
+        // word count ar jonno str_word_count()
+        $word_count=str_word_count($content_argument);
+        $label_text=__('Total Number of Words','word-count');
+        $label_text=apply_filters('label_text_heading',$label_text);
+        $content_argument .= sprintf('<h2> %s = %s </h2>', $label_text, $word_count);
+        return $content_argument;
+    }
+    // content pawar jonno filter name the_content
+    add_filter('the_content','wordcount_count_word');
+    
+     
  
 ?>
